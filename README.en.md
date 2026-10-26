@@ -44,6 +44,6 @@ These are the same local visual fixture in the official UI and this fork. The sa
 
 ## Updates and documentation
 
-`Sync upstream` checks the official repository weekly and opens a review pull request when a clean update is available. It never merges upstream changes automatically. See the [Arabic feature overview](README.ar.md), [agent installation prompt](docs/arabic-support/AGENT_INSTALL_PROMPT.md), [safety notice](SAFETY.md), and [MIT license](LICENSE).
+`Sync upstream` checks the official repository weekly and opens a review pull request when an update is available. It preserves the Arabic Web app dependency when upstream adds other dependencies to the same package file; other conflicts still require manual review. It never merges upstream changes into `master` automatically. See the [Arabic feature overview](README.ar.md), [agent installation prompt](docs/arabic-support/AGENT_INSTALL_PROMPT.md), [safety notice](SAFETY.md), and [MIT license](LICENSE).
 
 The `npx @deepseek-ai/dsh web` command installs the official upstream package, which does not contain this fork's Arabic support.
