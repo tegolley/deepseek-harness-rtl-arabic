@@ -40,16 +40,17 @@ jobs:
           git fetch upstream master
           branch="sync-upstream-$(git rev-parse --short=12 upstream/master)"
           git switch -c "$branch"
-          if git merge --no-edit upstream/master; then
-            if git diff --quiet "${{ github.sha }}" HEAD; then
-              echo 'changed=false' >> "$GITHUB_OUTPUT"
-            else
-              echo 'changed=true' >> "$GITHUB_OUTPUT"
-              echo "branch=$branch" >> "$GITHUB_OUTPUT"
-            fi
+          if ! git merge --no-edit upstream/master; then
+            node .github/resolve-upstream-web-app-package.mjs
+            git add packages/bundle/web-app/package.json
+            git diff --check
+            git commit --no-edit
+          fi
+          if git diff --quiet "${{ github.sha }}" HEAD; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
           else
-            echo 'Upstream merge has conflicts; review the failed workflow run.' >&2
-            exit 1
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+            echo "branch=$branch" >> "$GITHUB_OUTPUT"
           fi
       - name: Push the update branch
         if: steps.merge.outputs.changed == 'true'
@@ -69,7 +70,7 @@ jobs:
           fi
           gh pr create --base master --head "$branch" \
             --title "Sync official upstream $(git rev-parse --short=12 upstream/master)" \
-            --body 'Clean merge of the official master. Review the Arabic support package and Web checks before merging.'
+            --body 'Official upstream merged with the Arabic dependency preserved. Review the Arabic support package and Web checks before merging.'
       - name: Run checks on the update branch
         if: steps.merge.outputs.changed == 'true'
         env:

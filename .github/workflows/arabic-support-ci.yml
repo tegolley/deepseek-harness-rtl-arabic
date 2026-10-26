@@ -43,8 +43,8 @@ jobs:
           packages/client/ui-plan/tests
           packages/client/ui-input-trigger/tests
           --maxWorkers=2 --testTimeout=30000
-      - name: Install Chromium for Web replay tests
-        run: corepack pnpm --dir apps/web exec playwright install --with-deps chromium
+      - name: Install browsers for Web replay tests
+        run: corepack pnpm --dir apps/web exec playwright install --with-deps chromium webkit
       - name: Assemble Web client
         run: corepack pnpm run build
       - name: Arabic-related Web replay tests
